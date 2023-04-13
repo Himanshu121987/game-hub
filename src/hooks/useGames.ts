@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import apiClient from "../Services/api-client";
+import axios, { CanceledError } from "axios";
 
 export interface Platform{
     id:number;
@@ -37,7 +38,7 @@ const useGames=()=>{
     })
       .catch((err) => {
       
-        if(err instanceof cancelIdleCallback) return
+        if(err instanceof CanceledError) return
       seterror(err.message)
       setLoading(false);
     });
