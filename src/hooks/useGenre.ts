@@ -9,3 +9,5 @@ export interface Genre {
 const useGenre = () => useData<Genre>("/genres");
 
 export default useGenre;
+
+//lesson 21
