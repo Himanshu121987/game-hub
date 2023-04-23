@@ -1,4 +1,4 @@
-import { Grid, GridItem, Show } from "@chakra-ui/react";
+import { Grid, GridItem, HStack, Show } from "@chakra-ui/react";
 import NavBar from "./components/NavBar";
 import GameGrid from "./components/Game-Grid";
 import GenreList from "./components/GenreList";
@@ -6,12 +6,16 @@ import { useState } from "react";
 import { Genre } from "./hooks/useGenre";
 import PlaformSelector from "./components/PlatformSelector";
 import { Platform } from "./hooks/useGames";
+import SortSelector from "./components/SortSelector";
+
+export interface GameQuery {
+  genre: Genre | null;
+  platform: Platform | null;
+}
 
 function App() {
-  const [selectedGenre, setSelectedGenre] = useState<Genre | null>(null);
-  const [SelectedPlatform, setSelectedPlatform] = useState<Platform | null>(
-    null
-  );
+  const [gameQuery, setGameQuery] = useState<GameQuery>({} as GameQuery);
+
   return (
     <Grid
       templateAreas={{
@@ -24,24 +28,28 @@ function App() {
       }}
     >
       <GridItem area="main">
-        <PlaformSelector
-          selectedPlatform={SelectedPlatform}
-          onSelectPlatform={(platform) => setSelectedPlatform(platform)}
-        />
-        <GameGrid
-          selectedPlatform={SelectedPlatform}
-          selectedGenre={selectedGenre}
-        />
+        <HStack spacing={5} paddingLeft={10}>
+          <PlaformSelector
+            selectedPlatform={gameQuery.platform}
+            onSelectPlatform={(platform) =>
+              setGameQuery({ ...gameQuery, platform })
+            }
+          />
+          <SortSelector />
+        </HStack>
+        <GameGrid gameQuery={gameQuery} />
       </GridItem>
       <GridItem area="nav">
         <NavBar></NavBar>
       </GridItem>
       <Show>
         <GridItem area="aside" paddingX={2}>
-          <GenreList
-            selectedGenre={selectedGenre}
-            onSelectGenre={(genre) => setSelectedGenre(genre)}
-          />
+          <HStack margin={3}>
+            <GenreList
+              selectedGenre={gameQuery.genre}
+              onSelectGenre={(genre) => setGameQuery({ ...gameQuery, genre })}
+            />
+          </HStack>
         </GridItem>
       </Show>
     </Grid>
